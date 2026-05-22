@@ -13,6 +13,10 @@ const navStateSlice = createSlice({
 
             state.toggle = !state.toggle;
 
+        },
+
+        closeMenu :(state)=>{
+            state.toggle = false;
         }
 
 
@@ -23,5 +27,5 @@ const navStateSlice = createSlice({
 
 })
 
-export const {toggleNav} = navStateSlice.actions;
+export const {toggleNav,closeMenu} = navStateSlice.actions;
 export default navStateSlice.reducer;

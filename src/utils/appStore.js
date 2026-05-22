@@ -1,12 +1,15 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import navReducer from "./navStateSlice";
+import searchReducer from "./searchSlice"
 
 const appStore = configureStore({
 
     reducer:{
     
-        nav: navReducer
+        nav: navReducer,
+        search:searchReducer
+
     }
 })
 

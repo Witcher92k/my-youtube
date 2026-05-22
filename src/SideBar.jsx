@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const menuItems = [
   { icon: "🏠", label: "Home" },
@@ -13,29 +14,41 @@ const exploreItems = [
   { icon: "🎮", label: "Gaming" },
   { icon: "📰", label: "News" },
   { icon: "🏆", label: "Sports" },
+  
 ]
 
-const SideBarSection = ({ title, items }) => (
+
+const SideBarSection = ({ title, items ,navigateFunc }) => (
+ 
+
   <div className="mb-2">
     {title && <p className="text-xs font-semibold text-gray-500 uppercase px-4 py-2">{title}</p>}
     {items.map((item) => (
-      <div
-        key={item.label}
-        className="flex items-center gap-4 px-4 py-2 rounded-xl cursor-pointer hover:bg-gray-100"
-      >
-        <span className="text-xl">{item.icon}</span>
-        <span className="text-sm font-medium">{item.label}</span>
-      </div>
+      <button key={item.label} onClick={() => navigateFunc(item.label)} className="w-full">
+        <div className="flex items-center gap-4 px-4 py-2 rounded-xl cursor-pointer hover:bg-gray-100">
+          <span className="text-xl">{item.icon}</span>
+          <span className="text-sm font-medium">{item.label}</span>
+        </div>
+      </button>
     ))}
     <hr className="my-2 border-gray-200" />
   </div>
 )
 
 const SideBar = () => {
+
+  const navigate = useNavigate();
+
+  const naviGateTo = (label)=>{
+    if(label=='Home'){
+      navigate('/');
+    }
+  }
+
   return (
     <div className="w-56 h-screen overflow-y-auto pt-2 fixed top-16 left-0 text-black">
-      <SideBarSection items={menuItems} />
-      <SideBarSection title="Explore" items={exploreItems} />
+      <SideBarSection navigateFunc={naviGateTo}   items={menuItems} />
+      <SideBarSection title="Explore" items={exploreItems} navigateFunc={naviGateTo} />
     </div>
   )
 }

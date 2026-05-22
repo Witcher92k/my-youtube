@@ -1,10 +1,12 @@
 import React from 'react'
 import ButtonList from './ButtonList'
 import VideoContainer from './VideoContainer'
+import { useSelector } from 'react-redux'
 
-const MainContainer = ({ sidebarOpen }) => {
+const MainContainer = () => {
+  const navToggleState = useSelector(store => store.nav.toggle)
   return (
-    <div className={`flex-1 ${sidebarOpen ? 'ml-56' : ''}`}>
+    <div className={`flex-1 ${navToggleState ? 'ml-56' : 'ml-0'}`}>
         <ButtonList/>
         <VideoContainer/>
     </div>

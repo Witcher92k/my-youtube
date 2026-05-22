@@ -1,7 +1,6 @@
-import React from 'react'
 import SideBar from './SideBar'
-import MainContainer from './MainContainer'
 import { useSelector } from 'react-redux'
+import { Outlet } from 'react-router-dom'
 
 const Body = () => {
 
@@ -11,7 +10,7 @@ const Body = () => {
     <div className='flex'>
 
         { navToggleState && <SideBar/> }
-        <MainContainer sidebarOpen={navToggleState}/>
+        <Outlet></Outlet>
     </div>
   )
 }
