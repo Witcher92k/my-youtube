@@ -1,4 +1,3 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const menuItems = [
@@ -40,13 +39,13 @@ const SideBar = () => {
   const navigate = useNavigate();
 
   const naviGateTo = (label)=>{
-    if(label=='Home'){
+    if(label==='Home'){
       navigate('/');
     }
   }
 
   return (
-    <div className="w-56 h-screen overflow-y-auto pt-2 fixed top-16 left-0 text-black">
+    <div className="w-56 h-screen overflow-y-auto pt-2 fixed top-[72px] left-0 text-black bg-white z-40">
       <SideBarSection navigateFunc={naviGateTo}   items={menuItems} />
       <SideBarSection title="Explore" items={exploreItems} navigateFunc={naviGateTo} />
     </div>

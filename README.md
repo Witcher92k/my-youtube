@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# MyTube — a YouTube Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A YouTube clone built with **React 19**, **Redux Toolkit**, **React Router 7**, **Tailwind CSS**, and the **YouTube Data API v3**.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Home feed** — trending videos with loading skeletons and error states
+- **Search** — debounced autocomplete suggestions (Redux-cached) + a full search-results page
+- **Watch page** — embedded player, real video metadata (title, channel, views, likes, expandable description)
+- **Comments** — real comments fetched from the YouTube API, with nested replies
+- **Live chat simulation** — streaming messages with a capped Redux buffer, auto-scroll, and a composer to send your own messages
+- **Production-ready plumbing** — route-level code splitting, error boundary, 404 page, aborted in-flight requests on unmount, SPA redirects for deployment
 
-### `npm start`
+## Getting started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+# 1. Install dependencies
+npm install
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# 2. Configure your API key
+cp .env.example .env
+# then edit .env and paste your YouTube Data API v3 key
 
-### `npm test`
+# 3. Run the dev server
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Getting a YouTube API key
 
-### `npm run build`
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) and create a project.
+2. Enable **YouTube Data API v3** (APIs & Services → Library).
+3. Create an **API key** (APIs & Services → Credentials).
+4. **Restrict the key** to your domains (Credentials → your key → Application restrictions → *Websites*), e.g. `localhost:3000` and your production URL. Client-side keys are always visible in the browser — referrer restrictions are what keep them safe.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Scripts
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+| Command | What it does |
+| --- | --- |
+| `npm start` | Dev server at http://localhost:3000 |
+| `npm test` | Run the test suite |
+| `npm run build` | Production build in `build/` |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Deployment
 
-### `npm run eject`
+This is a static single-page app — any static host works. `vercel.json` and `public/_redirects` are already included so client-side routes (`/watch`, `/results`) don't 404 on refresh.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Vercel (recommended)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm i -g vercel
+vercel          # from the my-youtube/ directory, follow the prompts
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Or push to GitHub and import the repo at [vercel.com/new](https://vercel.com/new). Either way, add the environment variable `REACT_APP_YOUTUBE_API_KEY` in Project Settings → Environment Variables, then redeploy.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Netlify
 
-## Learn More
+```bash
+npm i -g netlify-cli
+npm run build
+netlify deploy --prod --dir=build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Set `REACT_APP_YOUTUBE_API_KEY` under Site settings → Environment variables (build-time), since CRA inlines env vars at build time.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Notes
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `REACT_APP_*` variables are **baked into the JS bundle at build time**. Changing them requires a rebuild/redeploy, and they are never secret — always use referrer-restricted keys.
+- The search-suggestion endpoint (`suggestqueries.google.com`) doesn't send CORS headers, so it can't be called with `fetch()`. Suggestions are loaded via JSONP instead (`src/utils/jsonp.js`), which works in all browsers. If the endpoint is ever unreachable, the app degrades gracefully — search itself always works.
